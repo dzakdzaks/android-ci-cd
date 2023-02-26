@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'com.github.triplet.play' version '3.7.0'
 }
 
 android {
@@ -12,7 +13,9 @@ android {
         applicationId "com.dzakdzaks.cicd"
         minSdk 21
         targetSdk 33
-        versionCode 1
+        versionCode project.properties["BUILD_NUMBER"]
+                ?.toString()?.toInt()?.minus(1643952714)
+                ?: 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -21,9 +24,21 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file(project.property("KEYSTORE_FILE"))
+            storePassword project.property("KEYSTORE_PASSWORD")
+            keyAlias project.property("KEY_ALIAS")
+            keyPassword project.property("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -45,6 +60,11 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+}
+
+play {
+    serviceAccountCredentials.set(file(project.property("GOOGLE_PLAY_API_KEY")))
+    track.set("internal")
 }
 
 dependencies {
