@@ -92,7 +92,7 @@ jobs:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.SERVICE_ACCOUNT_FIREBASE }}
           groups: general
-          file: ${{ env.main_project_module }}/build/outputs/apk/release/app-release-unsigned.apk
+          file: ${{ env.main_project_module }}/build/outputs/apk/release/app-release.apk
 
       # Create a build number based on timestamp / UTC time
       - name: set release date
