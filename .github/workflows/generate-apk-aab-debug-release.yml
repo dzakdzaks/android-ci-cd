@@ -42,88 +42,88 @@ jobs:
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
-#
-#      # Run Tests Build
-#      - name: Run gradle tests
-#        run: ./gradlew test
-#
-#      # Run Build Project
-#      - name: Build gradle project
-#        run: ./gradlew build
-#
-#      # Create APK Debug
-#      - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
-#        run: ./gradlew assembleDebug
-#
-#      # Create APK Release
-#      - name: Build apk release project (APK) - ${{ env.main_project_module }} module
-#        run: ./gradlew assemble
-#
-#      # Create Bundle AAB Release
-#      # Noted for main module build [main_project_module]:bundleRelease
-#      - name: Build app bundle release (AAB) - ${{ env.main_project_module }} module
-#        run: ./gradlew ${{ env.main_project_module }}:bundleRelease
-#
-#      # Upload Artifact Build
-#      # Noted For Output [main_project_module]/build/outputs/apk/debug/
-#      - name: Upload APK Debug - ${{ env.repository_name }}
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) debug generated
-#          path: ${{ env.main_project_module }}/build/outputs/apk/debug/
-#
-#      # Noted For Output [main_project_module]/build/outputs/apk/release/
-#      - name: Upload APK Release - ${{ env.repository_name }}
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
-#          path: ${{ env.main_project_module }}/build/outputs/apk/release/
-#
-#      # Noted For Output [main_project_module]/build/outputs/bundle/release/
-#      - name: Upload AAB (App Bundle) Release - ${{ env.repository_name }}
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - App bundle(s) AAB release generated
-#          path: ${{ env.main_project_module }}/build/outputs/bundle/release/
-#
-#      - name: upload artifact to Firebase App Distribution
-#        uses: wzieba/Firebase-Distribution-Github-Action@v1
-#        with:
-#          appId: ${{ secrets.FIREBASE_APP_ID }}
-#          serviceCredentialsFileContent: ${{ secrets.SERVICE_ACCOUNT_FIREBASE }}
-#          groups: general
-#          file: ${{ env.main_project_module }}/build/outputs/apk/release/app-release.apk
 
-      # Create a build number based on timestamp / UTC time
-      - name: set release date
-        run: |
-          echo "BUILD_NUMBER=$(date +"%s")" >> ${GITHUB_ENV}
+      # Run Tests Build
+      - name: Run gradle tests
+        run: ./gradlew test
 
-      # Decode the keystore file containing the signing key
-      - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1.1
+      # Run Build Project
+      - name: Build gradle project
+        run: ./gradlew build
+
+      # Create APK Debug
+      - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
+        run: ./gradlew assembleDebug
+
+      # Create APK Release
+      - name: Build apk release project (APK) - ${{ env.main_project_module }} module
+        run: ./gradlew assemble
+
+      # Create Bundle AAB Release
+      # Noted for main module build [main_project_module]:bundleRelease
+      - name: Build app bundle release (AAB) - ${{ env.main_project_module }} module
+        run: ./gradlew ${{ env.main_project_module }}:bundleRelease
+
+      # Upload Artifact Build
+      # Noted For Output [main_project_module]/build/outputs/apk/debug/
+      - name: Upload APK Debug - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v3
         with:
-          fileDir: './secrets'
-          fileName: 'release.keystore'
-          encodedString: ${{ secrets.KEYSTORE_FILE }}
+          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) debug generated
+          path: ${{ env.main_project_module }}/build/outputs/apk/debug/
 
-      # Decode the Google Play api key file
-      - name: Decode Google Play API key
-        id: decode_api_key
-        uses: timheuer/base64-to-file@v1.1
+      # Noted For Output [main_project_module]/build/outputs/apk/release/
+      - name: Upload APK Release - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v3
         with:
-          fileDir: './secrets'
-          fileName: 'google-play-api-key.json'
-          encodedString: ${{ secrets.GOOGLE_PLAY_API_KEY }}
+          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
+          path: ${{ env.main_project_module }}/build/outputs/apk/release/
 
-      # Build bundle and publish to Google Play
-      - name: Build & publish to Google Play
-        run: ./gradlew
-          -PBUILD_NUMBER="${{ env.BUILD_NUMBER }}"
-          -PgooglePlayApiKey="../${{ steps.decode_api_key.outputs.filePath }}"
-          -PKEYSTORE_FILE="../${{ steps.decode_keystore.outputs.filePath }}"
-          -PKEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
-          -PKEY_ALIAS=${{ secrets.KEY_ALIAS }}
-          -PKEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
-          publishBundle --max-workers 1
+      # Noted For Output [main_project_module]/build/outputs/bundle/release/
+      - name: Upload AAB (App Bundle) Release - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - App bundle(s) AAB release generated
+          path: ${{ env.main_project_module }}/build/outputs/bundle/release/
+
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.SERVICE_ACCOUNT_FIREBASE }}
+          groups: general
+          file: ${{ env.main_project_module }}/build/outputs/apk/release/app-release.apk
+
+#      # Create a build number based on timestamp / UTC time
+#      - name: set release date
+#        run: |
+#          echo "BUILD_NUMBER=$(date +"%s")" >> ${GITHUB_ENV}
+#
+#      # Decode the keystore file containing the signing key
+#      - name: Decode Keystore
+#        id: decode_keystore
+#        uses: timheuer/base64-to-file@v1.1
+#        with:
+#          fileDir: './secrets'
+#          fileName: 'release.keystore'
+#          encodedString: ${{ secrets.KEYSTORE_FILE }}
+#
+#      # Decode the Google Play api key file
+#      - name: Decode Google Play API key
+#        id: decode_api_key
+#        uses: timheuer/base64-to-file@v1.1
+#        with:
+#          fileDir: './secrets'
+#          fileName: 'google-play-api-key.json'
+#          encodedString: ${{ secrets.GOOGLE_PLAY_API_KEY }}
+#
+#      # Build bundle and publish to Google Play
+#      - name: Build & publish to Google Play
+#        run: ./gradlew
+#          -PBUILD_NUMBER="${{ env.BUILD_NUMBER }}"
+#          -PgooglePlayApiKey="../${{ steps.decode_api_key.outputs.filePath }}"
+#          -PKEYSTORE_FILE="../${{ steps.decode_keystore.outputs.filePath }}"
+#          -PKEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+#          -PKEY_ALIAS=${{ secrets.KEY_ALIAS }}
+#          -PKEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+#          publishBundle --max-workers 1

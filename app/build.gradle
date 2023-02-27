@@ -60,10 +60,10 @@ android {
     }
 }
 
-play {
-    serviceAccountCredentials.set(file(project.property("GOOGLE_PLAY_API_KEY")))
-    track.set("internal")
-}
+//play {
+//    serviceAccountCredentials.set(file(project.property("GOOGLE_PLAY_API_KEY")))
+//    track.set("internal")
+//}
 
 dependencies {
 
