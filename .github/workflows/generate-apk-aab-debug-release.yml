@@ -141,45 +141,45 @@ jobs:
           include-compare: false
           semver: false
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: ${{ steps.changelog.outputs.changelog }} &#x20;
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: Upload Signed APK Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/debug/app-debug.apk
-          asset_name: app-debug-${{ steps.var.outputs.tag }}.apk
-          asset_content_type: application/zip
-
-      - name: Upload Signed APK Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{steps.sign_apk.outputs.signedReleaseFile}}
-          asset_name: app-release-signed-${{ steps.var.outputs.tag }}.apk
-          asset_content_type: application/zip
-
-      - name: Upload Signed AAB Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{steps.sign_aab.outputs.signedReleaseFile}}
-          asset_name: app-release-signed-${{ steps.var.outputs.tag }}.aab
-          asset_content_type: application/zip
+#      - name: Create Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        with:
+#          tag_name: ${{ github.ref }}
+#          release_name: Release ${{ github.ref }}
+#          body: ${{ steps.changelog.outputs.changelog }} &#x20;
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+#
+#      - name: Upload Signed APK Release
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: app/build/outputs/apk/debug/app-debug.apk
+#          asset_name: app-debug-${{ steps.var.outputs.tag }}.apk
+#          asset_content_type: application/zip
+#
+#      - name: Upload Signed APK Release
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+#          asset_name: app-release-signed-${{ steps.var.outputs.tag }}.apk
+#          asset_content_type: application/zip
+#
+#      - name: Upload Signed AAB Release
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: ${{steps.sign_aab.outputs.signedReleaseFile}}
+#          asset_name: app-release-signed-${{ steps.var.outputs.tag }}.aab
+#          asset_content_type: application/zip
 
 #      # Create a build number based on timestamp / UTC time
 #      - name: set release date
